@@ -35,8 +35,10 @@
 
 /* GPIO */
 #define IO_IN_MODE            (2)
-#define IO_OUT_POWEROFF       (2)
-#define IO_OUT_LED1           (5)
+#define IO_OUT_POWEROFF       (12)
+#define IO_OUT_LED1           (3)
+#define IO_OUT_LED2           (5)
+#define IO_OUT_LED3           (6)
 
 
 /* S T R U C T U R E S ****************************************************************************/
@@ -65,6 +67,8 @@ tstrSleepMode sleepModeList[NB_MAX_MODE]; /* List of available modes            
 void io_led_update (void)
 {
   analogWrite(IO_OUT_LED1, pwmValue);
+  analogWrite(IO_OUT_LED2, pwmValue);
+  analogWrite(IO_OUT_LED3, pwmValue);
 }
 
 
@@ -75,6 +79,9 @@ void sheepy_find_next_mode (void)
   
   if (sleepMode >= NB_MAX_MODE)
     sleepMode = 0;
+
+  Serial.print("\nNew mode was selected : ");
+  Serial.println(sleepMode);
 }
 
 /*------------------------------------------------------------------------------------------------*/
@@ -232,11 +239,14 @@ void loop(void)
   io_led_update ();
   
   /* If user would like to change sleep mode we reset sheepy status and settings */
-  if (digitalRead(IO_IN_MODE) == true)
+  if (digitalRead(IO_IN_MODE) == LOW)
   {
     /* Switch to the next mode */
     sheepy_find_next_mode ();
     sheepy_apply_mode (sleepMode);
+
+    /* Wait user release button */
+    while (digitalRead(IO_IN_MODE) == LOW);
   }
 
   /* If the system or user ask to poweroff, do it */
