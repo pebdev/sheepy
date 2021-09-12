@@ -35,7 +35,7 @@
 
 /* GPIO */
 #define IO_IN_MODE            (2)
-#define IO_OUT_POWEROFF       (12)
+#define IO_OUT_POWEROFF       (A0)
 #define IO_OUT_LED1           (3)
 #define IO_OUT_LED2           (5)
 #define IO_OUT_LED3           (6)
@@ -255,6 +255,7 @@ void loop(void)
     digitalWrite(IO_OUT_POWEROFF, HIGH);
     while (1)
     {
+      Serial.println("POWER OFF");
       delay(10);
     }
   }
